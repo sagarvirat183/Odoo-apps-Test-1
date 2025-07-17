@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="avonplast_delivery_note_report_page_format" model="report.paperformat">
+        <field name="name">Invoice Paperformat</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">33</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="stock_piking_delivery_avonplast" model="ir.actions.report">
+        <field name="name">Delivery Challan </field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">avon_delivery_note.delivery_note_report</field>
+        <field name="report_file">avon_delivery_note.delivery_note_report</field>
+        <field name="print_report_name">(object.name)</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="avon_delivery_note.avonplast_delivery_note_report_page_format" />
+    </record>
+
+    <template id="delivery_note_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="avon_delivery_note.header_template_delivery_note">
+                    <div class="page">
+                        <table class="table table-sm m-0 p-0 " style="font-size:12px;width:100%;">
+                            <thead>
+                                <tr>
+                                    <td class="p-0" colspan="100%">
+                                        <div class="col-12 p-1 text-center"
+                                            style="border:1px solid black;">
+                                            <span class="fw-bold fs-6">DELIVERY CHALLAN</span>
+                                        </div>
+                                        
+
+                                        <div class="col-12 d-flex"  style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">
+                                            <div class="col-6 p-1" style="border-right:1px solid black;">
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div style="width:70%;">
+                                                        <t t-if="doc.partner_id">
+                                                            <span class="fw-bold" t-field="doc.partner_id.name" />
+                                                            <br />
+                                                            <!-- <span t-field="doc.partner_id.contact_address_complete"     /> -->
+                                                            <span t-if="doc.partner_id.street"
+                                                                t-esc="doc.partner_id.street" />
+                                                            <span t-if="doc.partner_id.street2"
+                                                                t-esc="doc.partner_id.street2" />
+                                                            <br />
+                                                            <t t-if="doc.partner_id.city">
+                                                                <span t-field="doc.partner_id.city" />
+                                                            </t>
+                                                            <t t-if="doc.partner_id.city">
+                                                                <t t-if="doc.partner_id.state_id">,</t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.state_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <t t-if="doc.partner_id.country_id">
+                                                                    , </t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.country_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.country_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.zip">,</t>
+                                                            <t t-if="doc.partner_id.zip">
+                                                                <span t-field="doc.partner_id.zip" />
+                                                            </t>
+
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                 <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">GSTIN</span>
+
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:72%;">
+                                                        <span t-field="doc.partner_id.vat" />
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">Email</span>
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:25%;">
+                                                        <span t-field="doc.partner_id.email" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            
+
+                                            <div class="col-6 p-1" >
+                                                 <div class="d-flex" style="border-left:0;height:25%;">
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold" >Delivery Note No : </span><br/>
+                                                         <span t-field="doc.name" />
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Dated :</span><br/>
+                                                         <span t-field="doc.scheduled_date" />
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div class="col-3 p-1" style="width:50%">
+                                                        <span class="fw-bold">E-way Bill No. : </span><br/>
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Mode/Terms Of Payment : </span><br/>
+                                                        <span t-field="doc.sale_id.payment_term_id" />
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div class="col-3 p-1" style="width:50%">
+                                                        <span class="fw-bold">Reference No. and Date : </span><br/>
+                                                         <span t-field="doc.sale_id" /> &#160; dt. <span t-field="doc.sale_id.date_order" />
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Other References : </span><br/>
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+
+                                        </div>
+
+
+
+                                         <div class="col-12 d-flex"
+                                            style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">
+                                            <div class="col-6 p-1" style="border-right:1px solid black;">
+                                                <div class="d-flex" style="border-left:0;">
+                                                   <!-- <div style="width:30%;">
+                                                        <span class="fw-bold">Consignee Address(Ship To)</span>
+                                                    </div> -->
+
+                                                      <div style="width:72%;">
+                                                        <t t-if="doc.sale_id">
+                                                            <span class="fw-bold">Consignee (Ship To)</span><br/>
+                                                            <span class="fw-bold" t-field="doc.sale_id.partner_shipping_id.name" />
+                                                            <br />
+                                                            <!-- <span
+                                                                t-field="doc.sale_id.partner_shipping_id.contact_address_complete" /> -->
+                                                             <span t-if="doc.sale_id.partner_shipping_id.street"
+                                                                t-esc="doc.sale_id.partner_shipping_id.street" />
+                                                            <span t-if="doc.sale_id.partner_shipping_id.street2"
+                                                                t-esc="doc.sale_id.partner_shipping_id.street2" />
+                                                            <br />
+                                                            <t t-if="doc.sale_id.partner_shipping_id.city">
+                                                                <span t-field="doc.sale_id.partner_shipping_id.city" />
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_shipping_id.city">
+                                                                <t t-if="doc.sale_id.partner_shipping_id.state_id">,</t>
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_shipping_id.state_id">
+                                                                <span
+                                                                    t-field="doc.sale_id.partner_shipping_id.state_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.sale_id.partner_shipping_id.state_id">
+                                                                <t t-if="doc.sale_id.partner_shipping_id.country_id">
+                                                                    , </t>
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_shipping_id.country_id">
+                                                                <span
+                                                                    t-field="doc.sale_id.partner_shipping_id.country_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.sale_id.partner_shipping_id.zip">,</t>
+                                                            <t t-if="doc.sale_id.partner_shipping_id.zip">
+                                                                <span t-field="doc.sale_id.partner_shipping_id.zip" />
+                                                            </t>
+
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="doc.partner_id.name" />
+                                                            <br />
+                                                            <!-- <span
+                                                                t-field="doc.partner_id.contact_address_complete" /> -->
+                                                            <span t-if="doc.partner_id.street"
+                                                                t-esc="doc.partner_id.street" />
+                                                            <span t-if="doc.partner_id.street2"
+                                                                t-esc="doc.partner_id.street2" />
+                                                            <br />
+                                                            <t t-if="doc.partner_id.city">
+                                                                <span t-field="doc.partner_id.city" />
+                                                            </t>
+                                                            <t t-if="doc.partner_id.city">
+                                                                <t t-if="doc.partner_id.state_id">,</t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.state_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <t t-if="doc.partner_id.country_id">
+                                                                    , </t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.country_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.country_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.zip">,</t>
+                                                            <t t-if="doc.partner_id.zip">
+                                                                <span t-field="doc.partner_id.zip" />
+                                                            </t>
+                                                        </t>
+                                                    </div>
+
+                                                </div>
+                                                 <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">GSTIN</span>
+
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:72%;">
+                                                        <t t-if="doc.sale_id.partner_shipping_id.vat">
+                                                            <span t-field="doc.sale_id.partner_shipping_id.vat" />
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="doc.partner_id.vat" />
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">Email</span>
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:72%;">
+                                                         <t t-if="doc.sale_id.partner_shipping_id.email">
+                                                            <span t-field="doc.sale_id.partner_shipping_id.email" />
+                                                        </t>
+                                                    <t t-else="">
+
+                                                    </t>
+                                                        
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-6 p-1">
+                                                 <div class="d-flex" style="border-left:0;height:25%;">
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Buyer's Order No. : </span><br/>
+                                                         <span t-field="doc.sale_id" />
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Dated : </span><br/>
+                                                         <span t-field="doc.sale_id.date_order" />
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div class="col-3 p-1" style="width:50%">
+                                                        <span class="fw-bold">Dispatch Doc No. :</span><br/>
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Transportation Mode : </span><br/>
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                </div>
+                                                
+                                                <br/>
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div class="col-3 p-1" style="width:50%">
+                                                        <span class="fw-bold">Vehicle Number : </span><br/>
+                                                        <!-- <span t-field="doc.sale_id" /> -->
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Destination : </span><br/>
+                                                        <t t-if="doc.sale_id.partner_shipping_id.state_id">
+                                                            <span t-field="doc.sale_id.partner_shipping_id.state_id" />
+                                                        </t>
+
+                                                        <!-- <span t-field="" /> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="col-6 p-1" style="">
+                                                <div class="d-flex">
+                                                    
+                                                </div>
+                                            </div> -->
+                                        </div>
+
+
+                                         <div class="col-12 d-flex"
+                                            style="border-bottom:1px solid black;border-right:1px solid black;border-left:1px solid black;">
+                                            <div class="col-6 p-1" style="border-right:1px solid black;">
+                                                <div class="d-flex" style="border-left:0;">
+                                                   <!-- <div style="width:30%;">
+                                                        
+                                                    </div> -->
+
+                                                      <div style="width:72%;">
+                                                        <t t-if="doc.sale_id">
+                                                            <span class="fw-bold">Bill TO : </span><br/>
+                                                            <span class="fw-bold" t-field="doc.sale_id.partner_invoice_id.name" />
+                                                            <br />
+                                                            <!-- <span
+                                                                t-field="doc.sale_id.partner_invoice_id.contact_address_complete" /> -->
+                                                             <span t-if="doc.sale_id.partner_invoice_id.street"
+                                                                t-esc="doc.sale_id.partner_invoice_id.street" />
+                                                            <span t-if="doc.sale_id.partner_invoice_id.street2"
+                                                                t-esc="doc.sale_id.partner_invoice_id.street2" />
+                                                            <br />
+                                                            <t t-if="doc.sale_id.partner_invoice_id.city">
+                                                                <span t-field="doc.sale_id.partner_invoice_id.city" />
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_invoice_id.city">
+                                                                <t t-if="doc.sale_id.partner_invoice_id.state_id">,</t>
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_invoice_id.state_id">
+                                                                <span t-field="doc.sale_id.partner_invoice_id.state_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.sale_id.partner_invoice_id.state_id">
+                                                                <t t-if="doc.sale_id.partner_invoice_id.country_id"> , </t>
+                                                            </t>
+                                                            <t t-if="doc.sale_id.partner_invoice_id.country_id">
+                                                                <span t-field="doc.sale_id.partner_invoice_id.country_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.sale_id.partner_invoice_id.zip">,</t>
+                                                            <t t-if="doc.sale_id.partner_invoice_id.zip">
+                                                                <span t-field="doc.sale_id.partner_invoice_id.zip" />
+                                                            </t>
+
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="doc.partner_id.name" />
+                                                            <br />
+                                                            <!-- <span
+                                                                t-field="doc.partner_id.contact_address_complete" /> -->
+                                                            <span t-if="doc.partner_id.street"
+                                                                t-esc="doc.partner_id.street" />
+                                                            <span t-if="doc.partner_id.street2"
+                                                                t-esc="doc.partner_id.street2" />
+                                                            <br />
+                                                            <t t-if="doc.partner_id.city">
+                                                                <span t-field="doc.partner_id.city" />
+                                                            </t>
+                                                            <t t-if="doc.partner_id.city">
+                                                                <t t-if="doc.partner_id.state_id">,</t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.state_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.state_id">
+                                                                <t t-if="doc.partner_id.country_id">
+                                                                    , </t>
+                                                            </t>
+                                                            <t t-if="doc.partner_id.country_id">
+                                                                <span
+                                                                    t-field="doc.partner_id.country_id" />
+                                                            </t>
+
+                                                            <t t-if="doc.partner_id.zip">,</t>
+                                                            <t t-if="doc.partner_id.zip">
+                                                                <span t-field="doc.partner_id.zip" />
+                                                            </t>
+                                                        </t>
+                                                    </div>
+
+                                                   
+                                                </div>
+                                                 <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">GSTIN</span>
+
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:72%;">
+                                                        <t t-if="doc.sale_id.partner_invoice_id.zip">
+                                                            <span t-field="doc.sale_id.partner_invoice_id.vat" />
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="doc.partner_id.vat" />
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div style="width:25%;">
+                                                        <span class="fw-bold">Email</span>
+                                                    </div>
+                                                    <div class="px-1" style="width:3%">
+                                                        <span>:</span>
+                                                    </div>
+                                                    <div style="width:72%;">
+                                                        <t t-if="doc.sale_id.partner_invoice_id.email">
+                                                            <span t-field="doc.sale_id.partner_invoice_id.email" />
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="doc.partner_id.email" />
+                                                        </t>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            
+
+                                            <!-- <div class="col-6 p-1">
+                                                 <div class="d-flex" style="border-left:0;height:50%;">
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Dispatch Doc No. : </span>
+                                                         <span t-field="doc.sale_id" />
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Transportation Mode</span>
+                                                         <span t-field="" />
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <br/>
+                                                <div class="d-flex" style="border-left:0;">
+                                                    <div class="col-3 p-1" style="width:50%">
+                                                        <span class="fw-bold">Vehicle Number</span>
+                                                        <span t-field="doc.sale_id" />
+                                                    </div>
+                                                    <div class="col-3 p-1" style="width:50%;">
+                                                        <span class="fw-bold">Destination</span>
+                                                        <span t-field="doc." />
+                                                    </div>
+                                                </div>
+                                                
+                                            </div> -->
+
+                                            <div class="col-6 p-1" style="">
+                                                <div style="width:100%;">
+                                                    <span class="fw-bold">Terms and Condition</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr colspan="100%" style="">
+                                    <th class="text-center fw-bold"
+                                        style="width:4%;border:1px solid black;">Sl No.</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:29%;border:1px solid black;">Description</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:5%;border:1px solid black;">HSN/SAC</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:6%;border:1px solid black;">Qty</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:5%;border:1px solid black;">UOM</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:7%;border:1px solid black;">Rate</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:8%;border:1px solid black;">AUOM Qty</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:8%;border:1px solid black;">UOM</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:11%;border:1px solid black;">Price</th>
+                                    <!-- <th class="text-center fw-bold"
+                                        style="width:7%;border:1px solid black;">Trade Dis(%)</th> -->
+                                    <th class="text-center fw-bold"
+                                        style="width:6%;border:1px solid black;">Additional Dis(%)</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:9%;border:1px solid black;">Amount</th>
+                                </tr>
+                            </thead>
+                             <tbody>
+                                <t t-set="gross_amount" t-value="0"/>
+                                <t t-set="sum_qty" t-value="0"/>
+                                <t t-set="sl" t-value="1" />
+                                <!-- <t t-foreach="doc.invoice_line_ids" t-as="line"> -->
+                                 <t t-foreach="doc.move_ids_without_package" t-as="line">
+                                   
+                                     <tr style="page-break-inside:avoid;">
+                                            <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-esc="sl" />
+                                                <t t-set="sl" t-value="sl+1" />
+                                            </td>
+
+                                            <td class="p-0 px-1 "
+                                                style="border:1px solid black;">
+                                                <span t-field="line.product_id.name" />
+                                            </td>
+
+                                            <td colspan="1" class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.product_id.l10n_in_hsn_code" />
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.quantity"  t-options="{'widget':'float', 'precision': 0}" />
+                                                <t t-set="sum_qty"  t-value="sum_qty + line.quantity" />
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.product_uom" />
+                                            </td>
+                                            <td class="p-0 px-1 text-center" style="border:1px solid black;">
+                                                 <t t-set="rate" t-value="float(line.quantity or 0) * float(line.product_id.y_markup_percentage or 0)" />
+                                                <span t-if='rate' t-esc="float(rate)"  t-options="{'widget': 'float', 'precision': 2}" />
+                                                <!-- <span t-field="line.product_uom" /> -->
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.y_quantity_alt_uom"  t-options="{'widget': 'float', 'precision': 2}" />
+                                            </td>
+
+                                             <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.y_alternate_uom" />
+                                            </td>
+
+                                              <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.sale_line_id.price_unit" t-options="{'widget': 'float', 'precision': 2}" />
+                                            </td>
+
+                                            <!-- <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <span t-field="line.y_trade_discount_amt" t-options="{'widget': 'float', 'precision': 2}"/>
+                                            </td> -->
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border:1px solid black;">
+                                                <!-- <span t-field="line.y_quantity_discount_amt" t-options="{'widget': 'float', 'precision': 2}"/> -->
+                                            </td>
+
+                                            <td class="p-0 px-1 text-end" style="border:1px solid black;">
+                                                <t t-set="amount_di" t-value="float(line.quantity or 0) * float(line.sale_line_id.price_unit or 0)" />
+                                                <span t-if='amount_di' t-esc="float(amount_di)"  t-options="{'widget': 'float', 'precision': 2}" />
+                                                <t t-set="gross_amount"  t-value="gross_amount + amount_di" />
+                                            </td>
+                                        </tr>
+                                       
+                                       
+                                        
+                                </t>
+                                 <tr class="text-right" style="page-break-inside:avoid;">
+                                    <td width="4%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="29%" class="text-end"  style="border:1px solid black;">
+                                        <span>
+                                            <strong>Total</strong>
+                                        </span>
+                                    </td>
+                                    <td width="5%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="6%" class="text-end" style="border:1px solid black;">
+                                        <t t-esc="float(sum_qty)" t-options="{'widget': 'float', 'precision': 2}" />
+                                    </td>
+                                    <td width="5%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="7%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="8%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="8%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="11%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="6%" class="text-end"  style="border:1px solid black;">
+                                    </td>
+                                    <td width="9%" class="text-end"  style="border:1px solid black;">
+                                        <t t-esc="float(gross_amount)" t-options="{'widget': 'float', 'precision': 2}" />
+                                    </td>
+                                </tr>
+                                
+                                <tr style="page-break-inside:avoid;">
+                                    <td colspan="12"
+                                        style="border:1px solid black;">
+                                        <span>
+                                            <strong>Amount Chargable (in Words):</strong>
+                                        </span>
+                                        <t t-if="doc.sale_id.currency_id.name == 'INR'">
+                                            <t t-set="amountwords" t-value="doc.amount_in_words(gross_amount).title()" />
+                                            <span t-esc="amountwords" />
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="doc.sale_id.currency_id.amount_to_text(gross_amount).replace('And', '').strip().title()" />
+                                        </t>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <table class="table table-sm m-0 p-0 " style="font-size:12px;width:100%;">
+                             <!-- <tr style="">
+                                    <th class="text-center fw-bold"
+                                        style="width:25%;border:1px solid black;">Stock Group Name</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:15%;border:1px solid black;">HSN/SAC</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:20%;border:1px solid black;">Qty In Nos.</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:20%;border:1px solid black;">Uom</th>
+                                    <th class="text-center fw-bold"
+                                        style="width:20%;border:1px solid black;">Taxable Value</th>
+                                    
+                                </tr> -->
+                                <tbody>
+                                 <!-- <t t-foreach="doc.move_ids_without_package" t-as="line">
+                                   
+                                     <tr style="page-break-inside:avoid;">
+
+                                            <td class="p-0 px-1 " style="border-left:1px solid black;">
+                                                <span t-field="line.product_id.name" />
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border-left:1px solid black;border-right:1px solid black;">
+                                                <span t-field="line.product_id.l10n_in_hsn_code" />
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center"
+                                                style="border-left:1px solid black;border-right:1px solid black;">
+                                                <span t-field="line.quantity"  t-options="{'widget':'float', 'precision': 0}" />
+                                            </td>
+
+                                            <td class="p-0 px-1 text-center" style="border-left:1px solid black;border-right:1px solid black;">
+                                                <span t-field="line.product_uom" />
+                                            </td>
+                                            <td class="p-0 px-1 text-center" style="border-left:1px solid black;border-right:1px solid black;">
+                                                 <span t-field="" />
+                                            </td>
+
+                                        </tr>
+                                        </t> -->
+
+                                        <!-- <tr class="text-right" style="page-break-inside:avoid;">
+                                            <td width="25%" class="p-0 px-1 "  style="border:1px solid black;">
+                                            </td>
+                                            <td width="15%" class="text-end"  style="border:1px solid black;">
+                                                <span>
+                                                    <strong>Total</strong>
+                                                </span>
+                                            </td>
+                                            <td width="20%" class="p-0 px-1 "  style="border:1px solid black;">
+                                            </td>
+                                            <td width="20%" class="p-0 px-1 "  style="border:1px solid black;">
+                                            </td>
+                                             <td width="20%" class="p-0 px-1 "  style="border:1px solid black;">
+                                            </td>
+                                        </tr> -->
+
+                                        <tr style="page-break-inside:avoid;">
+                                        <td  class="p-1" style="width:100%;padding-left:5px;border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;">
+                                            <!-- <span>
+                                                <strong>Tax Amount (in words) : </strong>
+                                            </span> -->
+
+                                            <!-- <t t-if="doc.currency_id.name == 'INR'">
+                                                <t t-set="amountwords"  t-value="doc.amount_in_words(doc.amount_total).title()" />
+                                                <span t-esc="amountwords" />
+                                            </t>
+                                            <t t-else="">
+                                                <span
+                                                    t-esc="doc.currency_id.amount_to_text(doc.amount_untaxed).replace('And', '').strip().title()" />
+                                            </t> -->
+                                            <br/>
+                                            <br/>
+                                             <br/>
+                                            <br/>
+                                            <span>
+                                                <strong>Company's PAN : </strong>
+                                                <span t-if="doc.company_id.sudo().parent_id" t-field="doc.company_id.l10n_in_pan" />
+                                            </span>
+                                        </td>
+                                       
+                                    </tr>
+
+                                </tbody>
+                        </table>
+                    
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>
