@@ -8,7 +8,7 @@
     'company': 'Prixgen Tech Solutions Pvt. Ltd.',
     'website': 'https://www.prixgen.com', 
     'category': 'Sales',
-    'version': '18.0.0.2',
+    'version': '18.0.0.3',
     'App origin':'Base',
     'license': 'LGPL-3',
     'depends': ['sale','sale_stock','sale_base_18'],
