@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_view_id_inherit_product_category" model="ir.ui.view">
+            <field name="name">product.category.view.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='y_lot_valuated']" position="after">
+                    <field name="y_update_lot_qty" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

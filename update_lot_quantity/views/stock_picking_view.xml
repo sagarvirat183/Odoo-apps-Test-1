@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_update_lot_qty" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.update.lot.qty</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_update_lot_quantity" string="Update Lot Quantity" type="object" invisible="show_update_lot_button == False" class="oe_highlight"/>
+                <field name="show_update_lot_button" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
