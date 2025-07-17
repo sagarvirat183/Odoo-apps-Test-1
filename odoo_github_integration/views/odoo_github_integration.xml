@@ -1,0 +1,76 @@
+<odoo>
+    <record id="view_github_repository_tree" model="ir.ui.view">
+        <field name="name">github.repository.tree</field>
+        <field name="model">github.repository</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="owner"/>
+                <field name="html_url" widget="url"/>
+                <field name="last_sync_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_github_repository_form" model="ir.ui.view">
+        <field name="name">github.repository.form</field>
+        <field name="model">github.repository</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="sync_repository_data" type="object" string="Sync Now" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="owner"/>
+                        <field name="html_url" widget="url"/>
+                        <field name="last_sync_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Odoo Apps">
+                            <field name="app_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="module_name"/>
+                                    <field name="version"/>
+                                    <field name="path"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_github_repository" model="ir.actions.act_window">
+        <field name="name">GitHub Repositories</field>
+        <field name="res_model">github.repository</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_github_integration_root" name="GitHub Integration" sequence="100"/>
+    <menuitem id="menu_github_repositories" name="Repositories" parent="menu_github_integration_root" action="action_github_repository"/>
+
+    <record id="view_github_app_tree" model="ir.ui.view">
+        <field name="name">github.app.tree</field>
+        <field name="model">github.app</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="module_name"/>
+                <field name="version"/>
+                <field name="repository_id"/>
+                <field name="path"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_github_app" model="ir.actions.act_window">
+        <field name="name">GitHub Apps</field>
+        <field name="res_model">github.app</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_github_apps" name="Apps" parent="menu_github_integration_root" action="action_github_app"/>
+
+</odoo>

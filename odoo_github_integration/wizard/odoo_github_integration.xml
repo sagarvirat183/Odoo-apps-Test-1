@@ -1,0 +1,35 @@
+<odoo>
+
+        <record id="ir_cron_sync_github_repositories" model="ir.cron">
+            <field name="name">Synchronize GitHub Repositories</field>
+            <field name="model_id" ref="model_github_repository"/>
+            <field name="state">code</field>
+            <field name="code">model.search([]).sync_repository_data()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    <record id="view_github_sync_wizard_form" model="ir.ui.view">
+        <field name="name">github.sync.wizard.form</field>
+        <field name="model">github.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Synchronize GitHub Repositories">
+                <p>Click "Sync All" to fetch the latest information from all configured GitHub repositories.</p>
+                <footer>
+                    <button string="Sync All" name="sync_all_repositories" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_github_sync_wizard" model="ir.actions.act_window">
+        <field name="name">Sync GitHub Repositories</field>
+        <field name="res_model">github.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_github_sync_wizard" name="Sync Now" parent="menu_github_integration_root" action="action_github_sync_wizard" sequence="99"/>
+</odoo>
+
