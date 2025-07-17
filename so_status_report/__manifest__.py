@@ -1,5 +1,5 @@
 {
-    'name': "SO Status Report - 18.0.0.2",
+    'name': "SO Status Report - 18.0.0.3",
     'summary': """ SO Status Report """,
     'description':"""
         This module is useful to show the sale order lines with status of Delivery and Invoice""",
@@ -8,7 +8,7 @@
     'company': 'Prixgen Tech Solutions Pvt. Ltd.',
     'website': 'https://www.prixgen.com', 
     'category': 'Sales',
-    'version': '18.0.0.1',
+    'version': '18.0.0.2',
     'App origin':'Base',
     'license': 'LGPL-3',
     'depends': ['sale','sale_stock','sale_base_18'],
